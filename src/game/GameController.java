@@ -1,14 +1,15 @@
 package game;
 
 import java.util.ArrayList;
-import java.util.concurrent.TimeUnit;
 
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import logic.WinChecker;
 
 public class GameController extends VBox {
     // Constants
@@ -19,11 +20,13 @@ public class GameController extends VBox {
     private Text headerText;
     private GridPane grid;
     private ArrayList<GameButton> gameButtons;
+    private Button reset;
 
     public GameController() {
         headerText = new Text("Click any tile to start a game");
         grid = new GridPane();
         gameButtons = new ArrayList<GameButton>();
+        reset = new Button("Reset Game");
 
         setupGameButtons();
         setupVBox();
@@ -39,16 +42,38 @@ public class GameController extends VBox {
                 processButtonClick(button);
             });
         }
+
+        // reset button
+        reset.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            resetGame();
+            headerText.setText("Your Turn");
+        });
     }
 
     private void processButtonClick(GameButton button) {
-        button.setText("X");
-        headerText.setText("AI Thinking...");
-        disableGameButtons();
-            
-        wait(2);
+        button.setPlayerSelected();
+        String gameResult = WinChecker.getGameResult(gameButtons);
 
-        enableGameButtons();
+        switch(gameResult) {
+            case "win":
+                disableGameButtons();
+                headerText.setText("You win!");
+                break;
+            case "lose":
+                disableGameButtons();
+                headerText.setText("You lose!");
+                break;
+            case "tie":
+                disableGameButtons();
+                headerText.setText("Tie!");
+                break;
+            case "none":
+                int bestMove = WinChecker.getBestMove(gameButtons);
+                System.out.println(bestMove);
+                gameButtons.get(bestMove).setAISelected();
+                headerText.setText("Your turn!");
+                break;
+        }
     }
 
     private void disableGameButtons() {
@@ -67,6 +92,13 @@ public class GameController extends VBox {
         }
     }
 
+    private void resetGame() {
+        headerText.setText("Your turn!");
+        for(int i = 0; i < gameButtons.size(); i++) {
+            gameButtons.get(i).reset();
+        }
+    }
+
     private void setupVBox() {
         // Apply styles
         
@@ -81,18 +113,7 @@ public class GameController extends VBox {
         grid.setPrefWidth(500);
 
         // Add objects
-        this.getChildren().addAll(headerText, grid);
+        this.getChildren().addAll(headerText, grid, reset);
     }
 
-    public static void wait(int s)
-    {
-        try
-        {
-            TimeUnit.SECONDS.sleep(s);
-        }
-        catch(InterruptedException ex)
-        {
-            
-        }
-    }
 }

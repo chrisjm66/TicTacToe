@@ -18,11 +18,33 @@ public class GameButton extends Button {
         this.setDisable(true);
     }
 
+    public void setPlayerSelected() {
+        this.setText("X");
+        this.setDisable(true);
+    }
+
+    public boolean isPlayerSelected() {
+        return this.getText().equalsIgnoreCase("X");
+    }
+
+    public boolean isAiSelected() {
+        return this.getText().equalsIgnoreCase("O");
+    }
+
+    public boolean isEmpty() {
+        return this.getText().equalsIgnoreCase("");
+    }
+
     public void enable() {
         this.setDisable(false);
     }
 
     public void disable() {
         this.setDisable(true);
+    }
+
+    public void reset() {
+        this.setText("");
+        this.setDisable(false);
     }
 }
