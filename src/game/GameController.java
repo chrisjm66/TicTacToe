@@ -1,7 +1,10 @@
 package game;
 
+import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
+
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -15,27 +18,52 @@ public class GameController extends VBox {
     // Objects
     private Text headerText;
     private GridPane grid;
-    private Button[] gameButtons;
+    private ArrayList<GameButton> gameButtons;
 
     public GameController() {
         headerText = new Text("Click any tile to start a game");
         grid = new GridPane();
-        gameButtons = new Button[9];
+        gameButtons = new ArrayList<GameButton>();
 
         setupGameButtons();
         setupVBox();
     }
 
     private void setupGameButtons() {
-        for(int i = 0; i < gameButtons.length; i++){
-            gameButtons[i] = new Button("X");
-            gameButtons[i].setPrefWidth(TILE_WIDTH);
-            gameButtons[i].setPrefHeight(TILE_HEIGHT);
-            gameButtons[i].setFont(Font.font(100));
-            gameButtons[i].setFocusTraversable(false);
-            
+        for(int i = 0; i < 9; i++){
+            gameButtons.add(new GameButton(TILE_WIDTH, TILE_HEIGHT)); 
+            GameButton button = gameButtons.get(i);
+            grid.add(button, i % 3, i / 3);
 
-            grid.add(gameButtons[i], i % 3, i / 3);
+            button.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                processButtonClick(button);
+            });
+        }
+    }
+
+    private void processButtonClick(GameButton button) {
+        button.setText("X");
+        headerText.setText("AI Thinking...");
+        disableGameButtons();
+            
+        wait(2);
+
+        enableGameButtons();
+    }
+
+    private void disableGameButtons() {
+        for(int i = 0; i < gameButtons.size(); i++) {
+            gameButtons.get(i).disable();
+        }
+    }
+
+    private void enableGameButtons() {
+        for(int i = 0; i < gameButtons.size(); i++) {
+            if (gameButtons.get(i).getText().equals("")) {
+                gameButtons.get(i).enable();
+            } else {
+                gameButtons.get(i).disable();
+            }
         }
     }
 
@@ -54,5 +82,17 @@ public class GameController extends VBox {
 
         // Add objects
         this.getChildren().addAll(headerText, grid);
+    }
+
+    public static void wait(int s)
+    {
+        try
+        {
+            TimeUnit.SECONDS.sleep(s);
+        }
+        catch(InterruptedException ex)
+        {
+            
+        }
     }
 }
