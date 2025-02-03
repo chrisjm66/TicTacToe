@@ -52,6 +52,17 @@ public class GameController extends VBox {
 
     private void processButtonClick(GameButton button) {
         button.setPlayerSelected();
+        
+        int bestMove = WinChecker.getBestMove(gameButtons);
+        System.out.println(bestMove);
+
+        if (bestMove != -1) {
+            gameButtons.get(bestMove).setAISelected();
+        }
+        updateGameStatus();
+    }
+
+    private void updateGameStatus() {
         String gameResult = WinChecker.getGameResult(gameButtons);
 
         switch(gameResult) {
@@ -68,9 +79,6 @@ public class GameController extends VBox {
                 headerText.setText("Tie!");
                 break;
             case "none":
-                int bestMove = WinChecker.getBestMove(gameButtons);
-                System.out.println(bestMove);
-                gameButtons.get(bestMove).setAISelected();
                 headerText.setText("Your turn!");
                 break;
         }

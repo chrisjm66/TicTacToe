@@ -55,7 +55,7 @@ public class WinChecker {
 
     private static boolean checkTie(ArrayList<GameButton> buttons) {
         for(int i = 0; i < 9; i++) {
-            if (!(buttons.get(i).isAiSelected() && buttons.get(i).isPlayerSelected())) {
+            if (!(buttons.get(i).isAiSelected() || buttons.get(i).isPlayerSelected())) {
                 return false;
             }
         }
@@ -74,19 +74,20 @@ public class WinChecker {
         }
     }
 
+    // maximizer: player
     public static int getBestMove(ArrayList<GameButton> buttons) {
         int bestMove = -1;
-        int bestValue = -1000;
+        int bestValue = 1000;
 
         for (int i = 0; i < 9; i++) {
             GameButton button = buttons.get(i);
             if (button.isEmpty()) {
                  // the buttons get selected so the alg can see what the result would be with this button selected
-                button.setPlayerSelected();
+                button.setAISelected();
                 int currentMoveValue = minimax(buttons, 0, false);
                 button.reset();
 
-                if (currentMoveValue > bestValue) {
+                if (currentMoveValue < bestValue) {
                     bestMove = i;
                     bestValue = currentMoveValue;
                 }
@@ -99,10 +100,13 @@ public class WinChecker {
 
     private static int minimax(ArrayList<GameButton> buttons, int depth, boolean isMaximizer) {
         if (checkPlayerWin(buttons)) {
-            return -10;
-        } else if (checkPlayerLose(buttons)) {
+            System.out.println("max");
             return 10;
+        } else if (checkPlayerLose(buttons)) {
+            System.out.println("min");
+            return -10;
         } else if (checkTie(buttons)) {
+            System.out.println("tie");
             return 0;
         }
         
@@ -112,8 +116,8 @@ public class WinChecker {
                 GameButton button = buttons.get(i);
                 if(button.isEmpty()) {
                     // the buttons get selected so the alg can see what the result would be with this button selected
-                    button.setPlayerSelected();
-                    System.out.println("minimax " + i + " depth " + depth);
+                    button.setAISelected();
+                    System.out.println("minimax " + i + " depth " + depth + "best " + best);
                     best = Math.max(best, minimax(buttons, depth + 1, !isMaximizer));
                     button.reset();
                 }
@@ -126,7 +130,7 @@ public class WinChecker {
                 if(button.isEmpty()) {
                     // the buttons get selected so the alg can see what the result would be with this button selected
                     button.setPlayerSelected();
-                    System.out.println("minimax " + i + " depth " + depth);
+                    System.out.println("minimax " + i + " depth " + depth + "best " + best);
                     best = Math.min(best, minimax(buttons, depth + 1, !isMaximizer));
                     button.reset();
                 }
