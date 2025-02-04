@@ -18,3 +18,6 @@ def main():
         print(phrase4)
 
 main()
+
+# loop integration
+# responese based printing
