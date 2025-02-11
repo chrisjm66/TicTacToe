@@ -6,60 +6,18 @@ import game.GameButton;
 
 public class WinChecker {
     private static boolean checkPlayerWin(ArrayList<GameButton> buttons){
-        // check rows
-        for(int i = 0; i < 7; i+=3) {
-            if(buttons.get(i).isPlayerSelected() && buttons.get(i+1).isPlayerSelected() && buttons.get(i+2).isPlayerSelected()) {
-                return true;
-            }
-        }
-
-        // check columns
-        for(int i = 0; i < 3; i++) {
-            if(buttons.get(i).isPlayerSelected() && buttons.get(i+3).isPlayerSelected() && buttons.get(i+6).isPlayerSelected()) {
-                return true;
-            }
-        }
-
-        // check diagonals manually
-        if(buttons.get(0).isPlayerSelected() && buttons.get(4).isPlayerSelected() && buttons.get(8).isPlayerSelected()) {
-            return true;
-        } else if (buttons.get(2).isPlayerSelected() && buttons.get(4).isPlayerSelected() && buttons.get(6).isPlayerSelected()) {
-            return true;
-        }
+       // TODO
         return false;
     }
 
     private static boolean checkPlayerLose(ArrayList<GameButton> buttons){
-        // check rows
-        for(int i = 0; i < 7; i+=3) {
-            if(buttons.get(i).isAiSelected() && buttons.get(i+1).isAiSelected() && buttons.get(i+2).isAiSelected()) {
-                return true;
-            }
-        }
-
-        // check columns
-        for(int i = 0; i < 3; i++) {
-            if(buttons.get(i).isAiSelected() && buttons.get(i+3).isAiSelected() && buttons.get(i+6).isAiSelected()) {
-                return true;
-            }
-        }
-
-        // check diagonals manually
-        if(buttons.get(0).isAiSelected() && buttons.get(4).isAiSelected() && buttons.get(8).isAiSelected()) {
-            return true;
-        } else if (buttons.get(2).isAiSelected() && buttons.get(4).isAiSelected() && buttons.get(6).isAiSelected()) {
-            return true;
-        }
+        // TODO
         return false;
     }
 
     private static boolean checkTie(ArrayList<GameButton> buttons) {
-        for(int i = 0; i < 9; i++) {
-            if (!(buttons.get(i).isAiSelected() || buttons.get(i).isPlayerSelected())) {
-                return false;
-            }
-        }
-        return true;
+        // TODO
+        return false;
     }
 
     public static String getGameResult(ArrayList<GameButton> buttons) {
